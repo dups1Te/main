@@ -6,7 +6,7 @@ public class Main {
         String playAgain = "";
         do {
             int theNumbers = (int) (Math.random() * 100 + 1);
-            System.out.println(theNumbers);
+//            System.out.println(theNumbers);
             int guess = 0;
             int numbersOfTries = 0;
 //            int finalTires = 0;
