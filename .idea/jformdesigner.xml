@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JFormDesignerProjectSettings">
+    <node name="javacodegenerator">
+      <entry key="_generalSettingsEnabled" value="true" />
+      <entry key="explicitimports" value="true" />
+      <entry key="setcomponentnames" value="true" />
+    </node>
+  </component>
+</project>
