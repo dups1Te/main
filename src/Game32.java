@@ -1,33 +1,31 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 import javax.sound.sampled.*;
 
 public class Game32 extends JFrame {
 
-    private JTextField pole;
-    private JLabel description;
-    private JButton step, newGameButton;
-    private JProgressBar progress;
-    private JTextArea history;
+    private final JTextField pole;
+    private final JLabel description;
+    private final JProgressBar progress;
+    private final JTextArea history;
     private int theNumber;
     private int attempts;
     private int maxAttempts;
-    private int score;
-    private ArrayList<String> pastGuesses = new ArrayList<>();
+    //private int score;
+    private final ArrayList<String> pastGuesses = new ArrayList<>();
 
     private void playSound(String fileName) {
         try {
             // ищем файл в том же пакете, что и Game32.class
-            AudioInputStream audioIn = AudioSystem.getAudioInputStream(getClass().getResource(fileName));
+            AudioInputStream audioIn = AudioSystem.getAudioInputStream(Objects.requireNonNull(getClass().getResource(fileName)));
             Clip clip = AudioSystem.getClip();
             clip.open(audioIn);
             clip.start();
         } catch (Exception e) {
             System.out.println("Ошибка воспроизведения звука: " + fileName);
-            e.printStackTrace();
         }
     }
 
@@ -41,7 +39,7 @@ public class Game32 extends JFrame {
         // Верхняя панель
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
-        newGameButton = new JButton("Новая игра");
+        JButton newGameButton = new JButton("Новая игра");
         topPanel.add(newGameButton);
         progress = new JProgressBar();
         progress.setStringPainted(true);
@@ -53,7 +51,7 @@ public class Game32 extends JFrame {
         JPanel centerPanel = new JPanel(new GridLayout(2, 2, 10, 10));
         JLabel write = new JLabel("Введите число:", SwingConstants.RIGHT);
         pole = new JTextField();
-        step = new JButton("Ход");
+        JButton step = new JButton("Ход");
         description = new JLabel("Начните угадывать число!", SwingConstants.CENTER);
         description.setOpaque(true);
 
@@ -73,24 +71,24 @@ public class Game32 extends JFrame {
         add(rightPanel, BorderLayout.EAST);
 
         // Hover эффект для кнопок
-        addHoverEffect(step, Color.LIGHT_GRAY, Color.WHITE);
-        addHoverEffect(newGameButton, Color.ORANGE, Color.WHITE);
+        addHoverEffect(step, Color.LIGHT_GRAY);
+        addHoverEffect(newGameButton, Color.ORANGE);
 
         // Действия кнопок
-        newGameButton.addActionListener(e -> startNewGame());
-        step.addActionListener(e -> checkGuess());
-        pole.addActionListener(e -> checkGuess());
+        newGameButton.addActionListener(_ -> startNewGame());
+        step.addActionListener(_ -> checkGuess());
+        pole.addActionListener(_ -> checkGuess());
 
         startNewGame();
     }
 
-    private void addHoverEffect(JButton button, Color hover, Color normal) {
-        button.setBackground(normal);
+    private void addHoverEffect(JButton button, Color hover) {
+        button.setBackground(Color.WHITE);
         button.setOpaque(true);
         button.setBorderPainted(false);
         button.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) { button.setBackground(hover); }
-            public void mouseExited(MouseEvent e) { button.setBackground(normal); }
+            public void mouseExited(MouseEvent e) { button.setBackground(Color.WHITE); }
         });
     }
 
@@ -100,13 +98,13 @@ public class Game32 extends JFrame {
         theNumber = (int)(Math.random()*100 + 1);
         attempts = 0;
         maxAttempts = 10;
-        score = 0;
+        //score = 0;
         pole.setEditable(true);
         description.setText("Введите число и нажмите \"Ход\"");
         description.setBackground(Color.WHITE);
         progress.setMaximum(maxAttempts);
         progress.setValue(maxAttempts);
-        SwingUtilities.invokeLater(() -> pole.requestFocusInWindow());
+        SwingUtilities.invokeLater(pole::requestFocusInWindow);
     }
 
     private void checkGuess() {
@@ -136,7 +134,7 @@ public class Game32 extends JFrame {
             description.setBackground(Color.GREEN);
             pole.setEditable(false);
             playSound("sounds/win.wav");
-            score = Math.max(0, 100 - attempts*10);
+            //score = Math.max(0, 100 - attempts*10);
         }
 
         pastGuesses.add(guess + " -> " + feedback);
@@ -160,7 +158,7 @@ public class Game32 extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
+    static void main() {
         SwingUtilities.invokeLater(() -> new Game32().setVisible(true));
     }
 }
